@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+h5ad-env/
+
+# H5AD data files (too large for Git)
+*.h5ad
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+*~
+
+# WordPress files (if not needed)
+wp-content/
+
+# System files
+.vscode/
+.idea/
+*.swp
+*.swo

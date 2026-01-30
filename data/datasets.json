@@ -1,0 +1,16 @@
+{
+  "datasets": [
+    {
+      "name": "AG_C00841F3_cellbin",
+      "n_cells": 24993,
+      "n_genes": 31208,
+      "metadata_columns": [
+        "domain",
+        "domain.fine",
+        "subclass",
+        "cluster"
+      ],
+      "n_top_genes": 100
+    }
+  ]
+}

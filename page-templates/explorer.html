@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial Data Explorer - Lab Website</title>
+    <meta name="description" content="Interactive spatial transcriptomics data explorer for H5AD cellbin data">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="explorer.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="index.html"
+                style="color: rgba(255,255,255,0.9); text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 0.95rem; transition: opacity 0.2s;"
+                onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                ← Back to Home
+            </a>
+            <h1>
+                <span>🔬</span>
+                Spatial Data Explorer
+            </h1>
+        </div>
+        <div class="header-info">
+            <div class="header-stat" id="cell-count">
+                <span>📊</span>
+                <span id="n-cells">--</span> cells
+            </div>
+            <div class="header-stat" id="gene-count">
+                <span>🧬</span>
+                <span id="n-genes">--</span> genes
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <!-- Dataset Selection -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Dataset</div>
+                <div class="form-group">
+                    <select id="dataset-select" class="form-select">
+                        <option value="">Loading datasets...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Options</div>
+
+                <!-- Color By -->
+                <div class="form-group">
+                    <label class="form-label">Color by</label>
+                    <select id="color-by-select" class="form-select">
+                        <option value="cluster">Cluster</option>
+                        <option value="subclass">Subclass</option>
+                        <option value="domain">Domain</option>
+                        <option value="domain.fine">Domain (Fine)</option>
+                    </select>
+                </div>
+
+                <!-- Gene Expression -->
+                <div class="form-group autocomplete-container">
+                    <label class="form-label">Gene Expression</label>
+                    <input type="text" id="gene-search" class="form-input" placeholder="Search gene...">
+                    <div id="gene-autocomplete" class="autocomplete-list"></div>
+                </div>
+            </div>
+
+            <!-- View Settings -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">View</div>
+
+                <!-- Marker Size -->
+                <div class="form-group">
+                    <label class="form-label">Marker Size</label>
+                    <div class="range-group">
+                        <input type="range" id="marker-size" class="range-slider" min="1" max="10" value="3">
+                        <span class="range-value" id="marker-size-value">3</span>
+                    </div>
+                </div>
+
+                <!-- Opacity -->
+                <div class="form-group">
+                    <label class="form-label">Opacity</label>
+                    <div class="range-group">
+                        <input type="range" id="opacity" class="range-slider" min="10" max="100" value="80">
+                        <span class="range-value" id="opacity-value">80%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Visualization Area -->
+        <main class="viz-container">
+            <!-- Viz Header -->
+            <div class="viz-header">
+                <div class="viz-tabs">
+                    <button class="viz-tab active" data-view="spatial">Spatial</button>
+                </div>
+                <div class="viz-toolbar">
+                    <button class="toolbar-btn" id="btn-reset-zoom" title="Reset View">
+                        🏠 Reset
+                    </button>
+                    <button class="toolbar-btn" id="btn-download" title="Download Plot">
+                        📷 Save
+                    </button>
+                </div>
+            </div>
+
+            <!-- Plot Container -->
+            <div class="plot-container">
+                <div id="plot"></div>
+
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Loading data...</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Legend Panel -->
+        <aside class="legend-panel">
+            <div class="legend-header">
+                <div class="legend-title" id="legend-title">Categories</div>
+            </div>
+            <div class="legend-list" id="legend-list">
+                <!-- Legend items will be populated here -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Explorer JavaScript -->
+    <script src="explorer.js"></script>
+</body>
+
+</html>
