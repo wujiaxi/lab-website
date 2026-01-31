@@ -1,0 +1,16 @@
+{
+  "articles": [
+    "Nature Communications 2025 - Cerebral Cortex"
+  ],
+  "datasets": {
+    "AG_C00841F3_cellbin": {
+      "path": "/home/jiaxi/AG_C00841F3_cellbin.h5ad",
+      "name": "AG_C00841F3 Cellbin",
+      "article": "Nature Communications 2025 - Cerebral Cortex",
+      "n_cells": 24993,
+      "n_genes": 31208,
+      "metadata_columns": ["domain", "domain.fine", "subclass", "cluster"],
+      "description": "Human cerebral cortex spatial transcriptomics data"
+    }
+  }
+}

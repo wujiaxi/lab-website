@@ -1,51 +1,66 @@
-# 🔬 Lab Website - Spatial Transcriptomics Explorer
+# 🔬 Spatial Data Explorer
 
-A modern lab website featuring an interactive spatial transcriptomics data explorer built with vanilla JavaScript and Plotly.
-
-**Live Demo**: https://wujiaxi.github.io/lab-website/
+A Flask-based web application for interactive visualization of spatial transcriptomics data (H5AD files).
 
 ## ✨ Features
 
-- **Interactive Data Explorer**: Visualize spatial transcriptomics datasets with 24,993+ cells
-- **Gene Expression Viewer**: Search and visualize expression of 100+ top variable genes
-- **Categorical Metadata**: Explore cells by domain, subclass, and 126 clusters
-- **Responsive Design**: Modern, mobile-friendly interface
-- **Static Website**: No backend required, fast and easy to deploy
-
-## 🚀 Quick Start
-
-### Local Development
-
-```bash
-# Start a local web server
-python3 -m http.server 8000
-
-# Open in browser
-http://localhost:8000/index.html
-```
-
-### View the Explorer
-
-```bash
-http://localhost:8000/explorer.html
-```
+- **Dataset Browser**: Gallery view with thumbnails, filterable by article/category
+- **Interactive Explorer**: Visualize spatial coordinates with Plotly.js
+- **Gene Expression**: Search and visualize any gene's expression
+- **Smart Caching**: Automatic memory management with 6-hour expiry
+- **On-demand Loading**: Data loaded from H5AD files only when requested
+- **100+ Datasets Support**: Designed for large-scale data exploration
 
 ## 📁 Project Structure
 
 ```
 lab-website/
-├── index.html              # Homepage with team and publications
-├── explorer.html           # Spatial data explorer
-├── explorer.css            # Explorer styles
-├── explorer.js             # Explorer functionality
-├── data/                   # Processed datasets
-│   ├── datasets.json       # Dataset index
-│   ├── *_metadata.json     # Cell coordinates and metadata
-│   └── *_expression.json   # Gene expression data
-├── scripts/
-│   └── extract_data.py     # Script to process H5AD files
-└── page-templates/         # Original template files
+├── backend/
+│   ├── app.py                 # Flask application
+│   ├── datasets.json          # Dataset registry
+│   ├── register_datasets.py   # Batch registration script
+│   ├── requirements.txt       # Python dependencies
+│   ├── run.sh                 # Startup script
+│   ├── static/
+│   │   └── thumbnails/        # Generated thumbnails
+│   └── templates/
+│       └── index.html         # Frontend UI
+├── h5ad-env/                  # Python virtual environment
+└── README.md
 ```
+
+## 🚀 Quick Start
+
+### 1. Install Dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### 2. Register Datasets
+
+```bash
+# Register all H5AD files in a directory
+python register_datasets.py /path/to/h5ad/files/ "Article Name"
+
+# Example
+python register_datasets.py /data/cerebral_cortex/ "Nature Communications 2025 - Cerebral Cortex"
+```
+
+### 3. Start Server
+
+```bash
+# Development mode
+bash run.sh
+
+# Production mode (with gunicorn)
+bash run.sh prod
+```
+
+### 4. Access
+
+Open `http://localhost:5000/` in your browser.
 
 ## 👥 Team
 
@@ -58,118 +73,75 @@ lab-website/
 ## 📚 Featured Publication
 
 **Charting the spatial transcriptome of the human cerebral cortex at single-cell resolution**
-Songren Wei, et al.
 *Nature Communications* (2025)
 [Read Paper](https://www.nature.com/articles/s41467-025-62793-9)
 
-## 🔧 Adding New Datasets
+## 🔧 API Endpoints
 
-### 1. Prepare your H5AD file
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/articles` | GET | List all article categories |
+| `/api/datasets` | GET | List all datasets |
+| `/api/datasets?article=xxx` | GET | Filter datasets by article |
+| `/api/datasets/<id>` | GET | Get dataset metadata |
+| `/api/datasets/<id>/thumbnail` | GET | Get/generate thumbnail |
+| `/api/datasets/<id>/spatial` | GET | Get spatial coordinates |
+| `/api/datasets/<id>/genes?q=xxx` | GET | Search genes |
+| `/api/datasets/<id>/expression/<gene>` | GET | Get gene expression |
+| `/api/cache` | GET | View cache statistics |
+| `/api/cache/clear` | POST | Clear all cached data |
+| `/api/cache/<id>` | DELETE | Remove dataset from cache |
 
-Ensure your H5AD file has:
-- `obs['x']` and `obs['y']` - spatial coordinates
-- `obs` columns for metadata (e.g., 'cluster', 'domain', 'subclass')
-- `var['name']` or `var_names` - gene names
+## 💾 Memory Management
 
-### 2. Update the extraction script
+The application uses a time-based cache with automatic garbage collection:
 
-Edit `scripts/extract_data.py` and add your H5AD file path:
-
-```python
-H5AD_FILES = [
-    "/path/to/your/dataset.h5ad",
-]
-```
-
-### 3. Run the extraction script
-
-```bash
-# Activate virtual environment (if needed)
-source h5ad-env/bin/activate
-
-# Run extraction
-python3 scripts/extract_data.py
-```
-
-This will create:
-- `data/your_dataset_metadata.json` (coordinates + metadata)
-- `data/your_dataset_expression.json` (top 100 variable genes)
-- `data/datasets.json` (updated index)
-
-### 4. Commit and push
+- Data is cached in memory after first access
+- Cache expires after **6 hours** of no use
+- Background thread checks every 5 minutes
+- Manual cache control via API endpoints
 
 ```bash
-git add data/
-git commit -m "Add new dataset: your_dataset"
-git push origin main
-```
+# Check cache status
+curl http://localhost:5000/api/cache
 
-GitHub Pages will automatically rebuild your site.
+# Clear all cache
+curl -X POST http://localhost:5000/api/cache/clear
+
+# Remove specific dataset
+curl -X DELETE http://localhost:5000/api/cache/dataset_id
+```
 
 ## 🌐 Deployment
 
-### GitHub Pages (Current Setup)
+### Production with Nginx
 
-1. Push code to GitHub
-2. Go to Settings → Pages
-3. Select **main** branch → Save
-4. Site will be live at: `https://wujiaxi.github.io/lab-website/`
+1. Install nginx: `sudo apt install nginx`
+2. Configure nginx as reverse proxy to Flask
+3. Run Flask with gunicorn: `bash run.sh prod`
 
-### Alternative Deployment Options
+Example nginx config:
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
 
-- **Netlify**: Drag and drop deployment
-- **Vercel**: Git integration
-- **AWS S3**: Static website hosting
-
-## 🛠️ Technical Details
-
-### Technologies Used
-
-- **Plotly.js**: Interactive plotting library
-- **Vanilla JavaScript**: No framework dependencies
-- **Python + Scanpy**: Data processing pipeline
-- **GitHub Pages**: Free static hosting
-
-### Browser Support
-
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-
-### Dataset Format
-
-The explorer expects JSON files in this format:
-
-```json
-{
-  "name": "dataset_name",
-  "n_cells": 24993,
-  "n_genes": 31208,
-  "coordinates": {
-    "x": [0.1, 0.2, ...],
-    "y": [0.3, 0.4, ...]
-  },
-  "metadata": {
-    "cluster": ["C1", "C2", ...],
-    "domain": ["D1", "D2", ...]
-  },
-  "top_genes": ["GENE1", "GENE2", ...]
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
 }
 ```
 
-## 📝 License
+## 🛠️ Technical Details
 
-This project is open source and available for research purposes.
-
-## 🤝 Contributing
-
-To update the website:
-
-1. Make changes locally
-2. Test with local server
-3. Commit and push to GitHub
-4. GitHub Pages will auto-deploy
+- **Backend**: Python Flask
+- **Frontend**: Vanilla JavaScript + Plotly.js
+- **Data Format**: H5AD (AnnData)
+- **Caching**: Custom time-based LRU cache
+- **Thumbnail Generation**: Matplotlib
 
 ## 📧 Contact
 
-For questions or collaborations, contact the lab through the website.
+For questions or collaborations, contact the lab.
