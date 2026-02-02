@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial Data Explorer - Dataset Browser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --bg-light: #f8f9fa;
+            --text: #2c3e50;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .header-nav a:hover {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .filter-bar select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 300px;
+            cursor: pointer;
+        }
+
+        .filter-bar select:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .dataset-count {
+            margin-left: auto;
+            color: #666;
+        }
+
+        /* Dataset Grid */
+        .dataset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .dataset-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .dataset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .dataset-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dataset-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .dataset-thumbnail .loading {
+            color: #999;
+        }
+
+        .dataset-info {
+            padding: 20px;
+        }
+
+        .dataset-info h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .dataset-info .article-tag {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .dataset-info .stats {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dataset-info .stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Explorer Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 95%;
+            height: 95%;
+            margin: auto;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .modal-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Explorer Sidebar */
+        .explorer-sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        /* Plot Area */
+        .explorer-plot {
+            flex: 1;
+            position: relative;
+        }
+
+        #plot {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-bar select {
+                min-width: 100%;
+            }
+
+            .dataset-count {
+                margin-left: 0;
+            }
+
+            .modal-body {
+                flex-direction: column;
+            }
+
+            .explorer-sidebar {
+                width: 100%;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>🔬 Spatial Data Explorer</h1>
+        <nav class="header-nav">
+            <a href="/">Datasets</a>
+            <a href="/about">About Lab</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <label>Filter by Article:</label>
+            <select id="article-filter">
+                <option value="">All Articles</option>
+            </select>
+            <span class="dataset-count" id="dataset-count">Loading...</span>
+        </div>
+
+        <!-- Dataset Grid -->
+        <div class="dataset-grid" id="dataset-grid">
+            <!-- Dataset cards will be inserted here -->
+        </div>
+    </main>
+
+    <!-- Explorer Modal -->
+    <div class="modal" id="explorer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Dataset Explorer</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Sidebar -->
+                <aside class="explorer-sidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">Color By</div>
+                        <div class="form-group">
+                            <select id="color-by" class="form-select">
+                                <option value="cluster">Cluster</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">Gene Expression</div>
+                        <div class="form-group">
+                            <input type="text" id="gene-search" class="form-input" placeholder="Search gene...">
+                        </div>
+                        <div id="gene-list" style="max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">Dataset Info</div>
+                        <div id="dataset-info" style="font-size: 0.9rem; color: #666;"></div>
+                    </div>
+                </aside>
+
+                <!-- Plot Area -->
+                <div class="explorer-plot">
+                    <div id="plot"></div>
+                    <div class="loading-overlay" id="loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Loading data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentDataset = null;
+        let spatialData = null;
+        let selectedGene = null;
+
+        // Color palette
+        const COLORS = [
+            '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+            '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+            '#aec7e8', '#ffbb78', '#98df8a', '#ff9896', '#c5b0d5'
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticles();
+            loadDatasets();
+
+            document.getElementById('article-filter').addEventListener('change', loadDatasets);
+            document.getElementById('color-by').addEventListener('change', renderPlot);
+            document.getElementById('gene-search').addEventListener('input', debounce(searchGenes, 300));
+        });
+
+        async function loadArticles() {
+            const response = await fetch('/api/articles');
+            const articles = await response.json();
+
+            const select = document.getElementById('article-filter');
+            articles.forEach(article => {
+                const option = document.createElement('option');
+                option.value = article;
+                option.textContent = article;
+                select.appendChild(option);
+            });
+        }
+
+        async function loadDatasets() {
+            const article = document.getElementById('article-filter').value;
+            const url = article ? `/api/datasets?article=${encodeURIComponent(article)}` : '/api/datasets';
+
+            const response = await fetch(url);
+            const datasets = await response.json();
+
+            const grid = document.getElementById('dataset-grid');
+            grid.innerHTML = '';
+
+            datasets.forEach(ds => {
+                const card = document.createElement('div');
+                card.className = 'dataset-card';
+                card.onclick = () => openExplorer(ds.id, ds.name);
+                card.innerHTML = `
+                    <div class="dataset-thumbnail">
+                        <img src="${ds.thumbnail}" alt="${ds.name}" loading="lazy"
+                             onerror="this.parentElement.innerHTML='<span class=\\'loading\\'>Loading thumbnail...</span>'">
+                    </div>
+                    <div class="dataset-info">
+                        <span class="article-tag">${ds.article}</span>
+                        <h3>${ds.name}</h3>
+                        <div class="stats">
+                            <span>📊 ${ds.n_cells.toLocaleString()} cells</span>
+                            <span>🧬 ${ds.n_genes.toLocaleString()} genes</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('dataset-count').textContent = `${datasets.length} datasets`;
+        }
+
+        async function openExplorer(datasetId, name) {
+            currentDataset = datasetId;
+            document.getElementById('modal-title').textContent = name;
+            document.getElementById('explorer-modal').classList.add('active');
+            document.getElementById('loading').style.display = 'flex';
+
+            // Load spatial data
+            const response = await fetch(`/api/datasets/${datasetId}/spatial`);
+            spatialData = await response.json();
+
+            // Update color by options
+            const colorSelect = document.getElementById('color-by');
+            colorSelect.innerHTML = '';
+            spatialData.metadata_columns.forEach(col => {
+                const option = document.createElement('option');
+                option.value = col;
+                option.textContent = col.charAt(0).toUpperCase() + col.slice(1).replace('.', ' ');
+                colorSelect.appendChild(option);
+            });
+
+            // Update info
+            document.getElementById('dataset-info').innerHTML = `
+                <p><strong>Cells:</strong> ${spatialData.n_cells.toLocaleString()}</p>
+                <p><strong>Genes:</strong> ${spatialData.n_genes.toLocaleString()}</p>
+            `;
+
+            // Render plot
+            await loadMetadata(colorSelect.value);
+            renderPlot();
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function loadMetadata(column) {
+            if (!spatialData.metadata || !spatialData.metadata[column]) {
+                const response = await fetch(`/api/datasets/${currentDataset}/spatial?color_by=${column}`);
+                const data = await response.json();
+                spatialData.metadata = { ...spatialData.metadata, ...data.metadata };
+            }
+        }
+
+        async function renderPlot() {
+            const colorBy = document.getElementById('color-by').value;
+            await loadMetadata(colorBy);
+
+            const { x, y } = spatialData.coordinates;
+            const colorData = spatialData.metadata[colorBy] || [];
+
+            let data;
+
+            if (selectedGene && spatialData.expression) {
+                // Gene expression mode
+                data = [{
+                    x, y,
+                    mode: 'markers',
+                    type: 'scattergl',
+                    marker: {
+                        size: 3,
+                        color: spatialData.expression,
+                        colorscale: [[0, '#e0e0e0'], [0.5, '#feb24c'], [1, '#bd0026']],
+                        colorbar: { title: selectedGene }
+                    },
+                    hovertemplate: `x: %{x}<br>y: %{y}<br>${selectedGene}: %{marker.color:.2f}<extra></extra>`
+                }];
+            } else {
+                // Categorical mode
+                const categories = [...new Set(colorData)].sort();
+                const colorMap = {};
+                categories.forEach((cat, i) => colorMap[cat] = COLORS[i % COLORS.length]);
+
+                data = [{
+                    x, y,
+                    mode: 'markers',
+                    type: 'scattergl',
+                    marker: {
+                        size: 3,
+                        color: colorData.map(c => colorMap[c]),
+                        opacity: 0.8
+                    },
+                    text: colorData,
+                    hovertemplate: `x: %{x}<br>y: %{y}<br>${colorBy}: %{text}<extra></extra>`
+                }];
+            }
+
+            const layout = {
+                xaxis: { title: 'X', scaleanchor: 'y' },
+                yaxis: { title: 'Y' },
+                margin: { t: 20, b: 40, l: 50, r: 20 },
+                hovermode: 'closest'
+            };
+
+            Plotly.react('plot', data, layout, { responsive: true });
+        }
+
+        async function searchGenes() {
+            const query = document.getElementById('gene-search').value;
+            if (query.length < 2) {
+                document.getElementById('gene-list').innerHTML = '';
+                return;
+            }
+
+            const response = await fetch(`/api/datasets/${currentDataset}/genes?q=${query}&limit=20`);
+            const data = await response.json();
+
+            const list = document.getElementById('gene-list');
+            list.innerHTML = data.genes.map(gene => `
+                <div style="padding: 8px; cursor: pointer; border-bottom: 1px solid #eee;"
+                     onclick="selectGene('${gene}')"
+                     onmouseover="this.style.background='#f0f0f0'"
+                     onmouseout="this.style.background='white'">
+                    ${gene}
+                </div>
+            `).join('');
+        }
+
+        async function selectGene(gene) {
+            selectedGene = gene;
+            document.getElementById('gene-search').value = gene;
+            document.getElementById('gene-list').innerHTML = '';
+            document.getElementById('loading').style.display = 'flex';
+
+            const response = await fetch(`/api/datasets/${currentDataset}/expression/${gene}`);
+            const data = await response.json();
+            spatialData.expression = data.expression;
+
+            renderPlot();
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('explorer-modal').classList.remove('active');
+            currentDataset = null;
+            spatialData = null;
+            selectedGene = null;
+        }
+
+        function debounce(fn, delay) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn(...args), delay);
+            };
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

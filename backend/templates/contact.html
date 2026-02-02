@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Pinoli Neuroscience Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #3498db;
+            --accent: #2c5aa0;
+            --bg-light: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #666;
+            --white: #ffffff;
+            --sidebar-width: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 0;
+            z-index: 1000;
+        }
+
+        .sidebar .logo {
+            padding: 0 25px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar .logo h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 12px 25px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: white;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            padding-left: 22px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .section-header {
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-header .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .contact-card h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+        }
+
+        .contact-info strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .contact-info a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .location-card {
+            grid-column: 1 / -1;
+            background: var(--bg-light);
+        }
+
+        .location-card p {
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-left: var(--sidebar-width);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            footer {
+                margin-left: 0;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .location-card {
+                grid-column: 1;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>🔬 PINOLI NEUROSCIENCE LAB</h2>
+        </div>
+        <nav>
+            <a href="/">HOME</a>
+            <a href="/research">RESEARCH</a>
+            <a href="/publications">PUBLICATIONS</a>
+            <a href="/#team">MEMBERS</a>
+            <a href="/explorer">DATA EXPLORER</a>
+            <a href="/contact" class="active">CONTACT</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Contact Us</h1>
+            <p>Get in touch with our research team</p>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="section-header">
+                <h2>Contact Information</h2>
+                <div class="divider"></div>
+                <p style="color: #666;">We welcome inquiries about collaborations, research opportunities, and questions
+                    about our work</p>
+            </div>
+
+            <div class="contact-grid">
+                <!-- Principal Investigator -->
+                <div class="contact-card">
+                    <h3>Principal Investigator</h3>
+                    <div class="contact-info">
+                        <strong>Dr. Songren Wei</strong>
+                        <p>Principal Investigator</p>
+                    </div>
+                    <div class="contact-info">
+                        <strong>Phone:</strong>
+                        <p>+1 503-381-4838</p>
+                    </div>
+                    <div class="contact-info">
+                        <strong>Email:</strong>
+                        <p><a href="mailto:weaweipoitier@gmail.com">weaweipoitier@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <!-- General Inquiries -->
+                <div class="contact-card">
+                    <h3>General Inquiries</h3>
+                    <div class="contact-info">
+                        <strong>Lab Email:</strong>
+                        <p><a href="mailto:weaweipoitier@gmail.com">weaweipoitier@gmail.com</a></p>
+                    </div>
+                    <div class="contact-info">
+                        <strong>Collaborations:</strong>
+                        <p>For research collaboration opportunities, please contact Dr. Wei directly</p>
+                    </div>
+                    <div class="contact-info">
+                        <strong>Prospective Students:</strong>
+                        <p>We welcome inquiries from prospective graduate students and postdoctoral researchers</p>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="contact-card location-card">
+                    <h3>Laboratory Location</h3>
+                    <div class="contact-info">
+                        <strong>Primary Affiliation:</strong>
+                        <p>Neurosurgery Center, The National Key Clinical Specialty<br>
+                            The Engineering Technology Research Center of Education Ministry of China on Diagnosis and
+                            Treatment of Cerebrovascular Disease<br>
+                            Guangdong Provincial Key Laboratory on Brain Function Repair and Regeneration<br>
+                            The Neurosurgery Institute of Guangdong Province<br>
+                            Zhujiang Hospital Institute for Brain Science and Intelligence<br>
+                            Zhujiang Hospital, Southern Medical University</p>
+                    </div>
+                    <div class="contact-info" style="margin-top: 20px;">
+                        <strong>Additional Affiliations:</strong>
+                        <p>NMPA Key Laboratory for Research and Evaluation of Drug Metabolism & Guangdong Provincial Key
+                            Laboratory of New Drug Screening<br>
+                            School of Pharmaceutical Sciences, Southern Medical University</p>
+
+                        <p style="margin-top: 10px;">Guangdong-Hong Kong-Macao Greater Bay Area Center for Brain Science
+                            and Brain-Inspired Intelligence<br>
+                            Southern Medical University</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pinoli Neuroscience Lab. All rights reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+            <a href="https://www.nature.com/articles/s41467-025-62793-9">Nature Communications Paper</a>
+        </p>
+    </footer>
+</body>
+
+</html>

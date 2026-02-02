@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications - Pinoli Neuroscience Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #3498db;
+            --accent: #2c5aa0;
+            --bg-light: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #666;
+            --white: #ffffff;
+            --sidebar-width: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 0;
+            z-index: 1000;
+        }
+
+        .sidebar .logo {
+            padding: 0 25px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar .logo h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 12px 25px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: white;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            padding-left: 22px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Publications Section */
+        .publications-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .section-header {
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-header .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .pub-card {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .pub-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .pub-card h3 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .pub-card h3 a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .pub-card h3 a:hover {
+            color: var(--secondary);
+        }
+
+        .pub-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .pub-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pub-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .pub-badge.featured {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .pub-year {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .pub-authors {
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-left: var(--sidebar-width);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            footer {
+                margin-left: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>🔬 PINOLI NEUROSCIENCE LAB</h2>
+        </div>
+        <nav>
+            <a href="/">HOME</a>
+            <a href="#research">RESEARCH</a>
+            <a href="/publications" class="active">PUBLICATIONS</a>
+            <a href="/#team">MEMBERS</a>
+            <a href="/explorer">DATA EXPLORER</a>
+            <a href="#contact">CONTACT</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Publications</h1>
+            <p>Research outputs from Pinoli Neuroscience Lab</p>
+        </section>
+
+        <!-- Publications Section -->
+        <section class="publications-section">
+            <div class="section-header">
+                <h2>Featured Publications</h2>
+                <div class="divider"></div>
+                <p style="color: #666;">Our contributions to understanding human brain architecture and neurological
+                    disorders</p>
+            </div>
+
+            <!-- Featured Publication -->
+            <div class="pub-card">
+                <h3>
+                    <a href="https://www.nature.com/articles/s41467-025-62793-9" target="_blank">
+                        Charting the spatial transcriptome of the human cerebral cortex at single-cell resolution
+                    </a>
+                </h3>
+                <p>This study presents a comprehensive spatial transcriptomic atlas of the human cerebral cortex,
+                    enabling detailed exploration of cell types and gene expression patterns across brain regions. The
+                    research integrates single-nuclei transcriptomes with spatial transcriptomics data to reveal
+                    distinct expression patterns and spatial arrangements of cortical neural cell types.</p>
+                <div class="pub-meta">
+                    <span class="pub-badge featured">Featured</span>
+                    <span class="pub-badge">Nature Communications</span>
+                    <span class="pub-year">2025</span>
+                    <span class="pub-authors">Songren Wei et al.</span>
+                </div>
+            </div>
+
+            <!-- Add more publications here as needed -->
+
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pinoli Neuroscience Lab. All rights reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+            <a href="https://www.nature.com/articles/s41467-025-62793-9">Nature Communications Paper</a>
+        </p>
+    </footer>
+</body>
+
+</html>

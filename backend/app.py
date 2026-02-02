@@ -221,14 +221,32 @@ def generate_thumbnail(dataset_id: str, adata, force=False):
 
 @app.route('/')
 def index():
-    """Serve main page"""
+    """Serve about/lab page as home"""
     return render_template('index.html')
 
 
-@app.route('/about')
-def about():
-    """Serve about/lab page"""
-    return render_template('about.html')
+@app.route('/explorer')
+def explorer():
+    """Serve data explorer page"""
+    return render_template('explorer.html')
+
+
+@app.route('/publications')
+def publications():
+    """Serve publications page"""
+    return render_template('publications.html')
+
+
+@app.route('/research')
+def research():
+    """Serve research page"""
+    return render_template('research.html')
+
+
+@app.route('/contact')
+def contact():
+    """Serve contact page"""
+    return render_template('contact.html')
 
 
 @app.route('/api/articles')

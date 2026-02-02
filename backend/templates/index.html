@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spatial Data Explorer - Dataset Browser</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <title>Pinoli Neuroscience Lab - Spatial Transcriptomics Research</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e3a5f;
             --secondary: #3498db;
-            --accent: #e74c3c;
+            --accent: #2c5aa0;
             --bg-light: #f8f9fa;
             --text: #2c3e50;
+            --text-light: #666;
             --white: #ffffff;
+            --sidebar-width: 220px;
         }
 
         * {
@@ -24,617 +26,513 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-light);
+            background: var(--white);
             color: var(--text);
-            min-height: 100vh;
+            line-height: 1.7;
         }
 
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 0;
+            z-index: 1000;
         }
 
-        .header h1 {
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .sidebar .logo {
+            padding: 0 25px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .header-nav a {
-            color: white;
+        .sidebar .logo h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 12px 25px;
+            color: var(--text);
             text-decoration: none;
-            margin-left: 20px;
-            opacity: 0.9;
-            transition: opacity 0.2s;
+            font-size: 0.95rem;
+            transition: all 0.2s;
         }
 
-        .header-nav a:hover {
-            opacity: 1;
+        .sidebar nav a:hover {
+            background: white;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            padding-left: 22px;
         }
 
         /* Main Content */
-        .main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
+        .main-content {
+            margin-left: var(--sidebar-width);
         }
 
-        /* Filter Bar */
-        .filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 450px;
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.85), rgba(52, 152, 219, 0.85)),
+                url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1600') center/cover;
             display: flex;
             align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* PI Profile Section */
+        .pi-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .pi-profile {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .pi-photo img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .pi-info h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .pi-info .title {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .pi-info .affiliation {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .pi-info .bio {
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Team Section */
+        .team-section {
+            background: var(--bg-light);
+            padding: 80px 60px;
+        }
+
+        .section-header {
+            max-width: 1200px;
+            margin: 0 auto 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-header .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .team-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team-member {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            background: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-photo img {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .team-info h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .team-info .role {
+            color: var(--secondary);
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .team-info .bio {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Publication Section */
+        .pub-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .pub-card {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .pub-card h3 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .pub-card h3 a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .pub-card h3 a:hover {
+            color: var(--secondary);
+        }
+
+        .pub-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .pub-meta {
+            display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
 
-        .filter-bar label {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .filter-bar select {
-            padding: 10px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            min-width: 300px;
-            cursor: pointer;
-        }
-
-        .filter-bar select:focus {
-            outline: none;
-            border-color: var(--secondary);
-        }
-
-        .dataset-count {
-            margin-left: auto;
-            color: #666;
-        }
-
-        /* Dataset Grid */
-        .dataset-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .dataset-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .dataset-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .dataset-thumbnail {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .dataset-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .dataset-thumbnail .loading {
-            color: #999;
-        }
-
-        .dataset-info {
-            padding: 20px;
-        }
-
-        .dataset-info h3 {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .dataset-info .article-tag {
-            display: inline-block;
-            background: var(--bg-light);
-            color: var(--secondary);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-        }
-
-        .dataset-info .stats {
-            display: flex;
-            gap: 15px;
-            color: #666;
+        .pub-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 16px;
+            border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .dataset-info .stats span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
         }
 
-        /* Explorer Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .modal.active {
-            display: flex;
+        .cta-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        .modal-content {
+        .cta-content p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .cta-btn {
+            display: inline-block;
             background: white;
-            width: 95%;
-            height: 95%;
-            margin: auto;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            color: var(--primary);
+            padding: 14px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .modal-header {
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Footer */
+        footer {
             background: var(--primary);
             color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 30px;
+            text-align: center;
+            margin-left: var(--sidebar-width);
         }
 
-        .modal-header h2 {
-            font-size: 1.2rem;
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
         }
 
-        .modal-close {
-            background: none;
-            border: none;
+        footer a:hover {
             color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-
-        .modal-body {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Explorer Sidebar */
-        .explorer-sidebar {
-            width: 280px;
-            background: #f8f9fa;
-            padding: 20px;
-            overflow-y: auto;
-            border-right: 1px solid #e0e0e0;
-        }
-
-        .sidebar-section {
-            margin-bottom: 25px;
-        }
-
-        .sidebar-title {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .form-select, .form-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        .form-select:focus, .form-input:focus {
-            outline: none;
-            border-color: var(--secondary);
-        }
-
-        /* Plot Area */
-        .explorer-plot {
-            flex: 1;
-            position: relative;
-        }
-
-        #plot {
-            width: 100%;
-            height: 100%;
-        }
-
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e0e0e0;
-            border-top-color: var(--secondary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            margin-top: 15px;
-            color: #666;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .filter-bar {
-                flex-direction: column;
-                align-items: stretch;
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
             }
 
-            .filter-bar select {
-                min-width: 100%;
-            }
-
-            .dataset-count {
+            .main-content {
                 margin-left: 0;
             }
 
-            .modal-body {
-                flex-direction: column;
+            footer {
+                margin-left: 0;
             }
 
-            .explorer-sidebar {
-                width: 100%;
-                max-height: 200px;
+            .pi-profile,
+            .team-member {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- Header -->
-    <header class="header">
-        <h1>🔬 Spatial Data Explorer</h1>
-        <nav class="header-nav">
-            <a href="/">Datasets</a>
-            <a href="/about">About Lab</a>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>🔬 PINOLI NEUROSCIENCE LAB</h2>
+        </div>
+        <nav>
+            <a href="/">HOME</a>
+            <a href="/research">RESEARCH</a>
+            <a href="/publications">PUBLICATIONS</a>
+            <a href="#team">MEMBERS</a>
+            <a href="/explorer">DATA EXPLORER</a>
+            <a href="/contact">CONTACT</a>
         </nav>
-    </header>
+    </aside>
 
     <!-- Main Content -->
-    <main class="main">
-        <!-- Filter Bar -->
-        <div class="filter-bar">
-            <label>Filter by Article:</label>
-            <select id="article-filter">
-                <option value="">All Articles</option>
-            </select>
-            <span class="dataset-count" id="dataset-count">Loading...</span>
-        </div>
-
-        <!-- Dataset Grid -->
-        <div class="dataset-grid" id="dataset-grid">
-            <!-- Dataset cards will be inserted here -->
-        </div>
-    </main>
-
-    <!-- Explorer Modal -->
-    <div class="modal" id="explorer-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Dataset Explorer</h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Principal Investigator</h1>
+                <p>Dr. Songren Wei</p>
             </div>
-            <div class="modal-body">
-                <!-- Sidebar -->
-                <aside class="explorer-sidebar">
-                    <div class="sidebar-section">
-                        <div class="sidebar-title">Color By</div>
-                        <div class="form-group">
-                            <select id="color-by" class="form-select">
-                                <option value="cluster">Cluster</option>
-                            </select>
-                        </div>
-                    </div>
+        </section>
 
-                    <div class="sidebar-section">
-                        <div class="sidebar-title">Gene Expression</div>
-                        <div class="form-group">
-                            <input type="text" id="gene-search" class="form-input" placeholder="Search gene...">
-                        </div>
-                        <div id="gene-list" style="max-height: 200px; overflow-y: auto;"></div>
-                    </div>
+        <!-- PI Profile Section -->
+        <section class="pi-section">
+            <div class="pi-profile">
+                <div class="pi-photo">
+                    <img src="/static/images/team/songren_wei.jpg" alt="Dr. Songren Wei">
+                </div>
+                <div class="pi-info">
+                    <h2>Dr. Songren Wei</h2>
+                    <p class="title">Principal Investigator</p>
+                    <div class="affiliation" style="line-height: 1.6; margin-bottom: 20px;">
+                        <p style="margin-bottom: 10px;">Neurosurgery Center, The National Key Clinical Specialty<br>
+                            The Engineering Technology Research Center of Education Ministry of China on Diagnosis and
+                            Treatment of Cerebrovascular Disease<br>
+                            Guangdong Provincial Key Laboratory on Brain Function Repair and Regeneration<br>
+                            The Neurosurgery Institute of Guangdong Province<br>
+                            Zhujiang Hospital Institute for Brain Science and Intelligence<br>
+                            Zhujiang Hospital, Southern Medical University</p>
 
-                    <div class="sidebar-section">
-                        <div class="sidebar-title">Dataset Info</div>
-                        <div id="dataset-info" style="font-size: 0.9rem; color: #666;"></div>
-                    </div>
-                </aside>
+                        <p style="margin-bottom: 10px;">NMPA Key Laboratory for Research and Evaluation of Drug
+                            Metabolism & Guangdong Provincial Key Laboratory of New Drug Screening<br>
+                            School of Pharmaceutical Sciences, Southern Medical University</p>
 
-                <!-- Plot Area -->
-                <div class="explorer-plot">
-                    <div id="plot"></div>
-                    <div class="loading-overlay" id="loading">
-                        <div class="loading-spinner"></div>
-                        <div class="loading-text">Loading data...</div>
+                        <p>Guangdong-Hong Kong-Macao Greater Bay Area Center for Brain Science and Brain-Inspired
+                            Intelligence<br>
+                            Southern Medical University</p>
+                    </div>
+                    <div class="contact" style="margin-bottom: 20px; font-size: 0.95rem;">
+                        <p style="margin-bottom: 5px;"><strong>Phone:</strong> +1 503-381-4838</p>
+                        <p><strong>Email:</strong> <a href="mailto:weaweipoitier@gmail.com"
+                                style="color: var(--secondary); text-decoration: none;">weaweipoitier@gmail.com</a></p>
+                    </div>
+                    <div class="bio">
+                        <h3 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">
+                            Laboratory Biography</h3>
+
+                        <p>Our laboratory stands at the forefront of integrating multi-omics approaches with artificial
+                            intelligence to decode the intricate neural cellular networks and fundamental principles
+                            governing the human brain. We believe that understanding the cellular architecture of the
+                            human brain is pivotal to elucidating its diverse intelligence capabilities.</p>
+
+                        <p style="margin-top: 15px;">Through pioneering research, we have systematically characterized
+                            the cellular structural foundations underlying multiple cortical regions with complex
+                            functions, establishing comprehensive cellular atlases of the human cerebral cortex. Our
+                            work bridges molecular profiling, spatial organization, and computational analysis to reveal
+                            how cellular diversity and organization give rise to higher-order cognitive functions.</p>
+
+                        <p style="margin-top: 15px;">Building upon this foundational knowledge, we extend our
+                            investigations to various neuropsychiatric disorders. By systematically comparing epileptic
+                            and healthy brain tissues, we have uncovered pathological alterations in cellular
+                            organizational structures within cortical and hippocampal regions. This comparative approach
+                            has provided unprecedented insights into the cellular mechanisms underlying epileptogenesis
+                            and associated cognitive impairments, opening new avenues for understanding disease
+                            pathophysiology at the cellular resolution.</p>
+
+                        <p style="margin-top: 15px;">Our integrative framework—combining single-cell multi-omics,
+                            spatial transcriptomics, neuroimaging, and mesoscopic imaging modalities with advanced AI
+                            algorithms—enables us to construct multi-dimensional maps of human brain architecture in
+                            both health and disease states, ultimately advancing our understanding of human neurobiology
+                            and neurological disorders.</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+
+        <!-- Team Section -->
+        <section class="team-section" id="team">
+            <div class="section-header">
+                <h2>Research Team</h2>
+                <div class="divider"></div>
+                <p style="color: #666;">Our multidisciplinary team of researchers advancing spatial transcriptomics</p>
+            </div>
+
+            <div class="team-container">
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="/static/images/team/meng_luo.jpg" alt="Dr. Meng Luo">
+                    </div>
+                    <div class="team-info">
+                        <h3>Dr. Meng Luo</h3>
+                        <p class="role">PhD</p>
+                        <p class="bio">Dr. Luo specializes in machine learning approaches for single-cell analysis,
+                            developing innovative computational methods to extract biological insights from complex
+                            spatial transcriptomics datasets.</p>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="/static/images/team/wenxuan_li.jpg" alt="Wenxuan Li">
+                    </div>
+                    <div class="team-info">
+                        <h3>Wenxuan Li</h3>
+                        <p class="role">PhD Candidate</p>
+                        <p class="bio">Wenxuan focuses on developing and optimizing spatial transcriptomics experimental
+                            methods, bridging wet-lab techniques with computational analysis to advance the field.</p>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="/static/images/team/chenyang_li.jpg" alt="Chenyang Li">
+                    </div>
+                    <div class="team-info">
+                        <h3>Chenyang Li</h3>
+                        <p class="role">PhD Candidate</p>
+                        <p class="bio">Chenyang's research in computational genomics focuses on integrating multi-omics
+                            data to understand gene regulation and cellular interactions in spatial contexts.</p>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="/static/images/team/jiaxi_wu.jpg" alt="Jiaxi Wu">
+                    </div>
+                    <div class="team-info">
+                        <h3>Jiaxi Wu</h3>
+                        <p class="role">Meta AI & Data Analysis Researcher</p>
+                        <p class="bio">Jiaxi specializes in bioinformatics and data analysis, developing pipelines and
+                            visualization tools to make spatial transcriptomics data accessible and interpretable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h3>🧬 Explore Our Spatial Transcriptomics Data</h3>
+                <p>Interactively visualize cell distributions, gene expressions, and spatial patterns from our latest
+                    research.</p>
+                <a href="/explorer" class="cta-btn">Launch Data Explorer</a>
+            </div>
+        </section>
     </div>
 
-    <script>
-        // State
-        let currentDataset = null;
-        let spatialData = null;
-        let selectedGene = null;
-
-        // Color palette
-        const COLORS = [
-            '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-            '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
-            '#aec7e8', '#ffbb78', '#98df8a', '#ff9896', '#c5b0d5'
-        ];
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadArticles();
-            loadDatasets();
-
-            document.getElementById('article-filter').addEventListener('change', loadDatasets);
-            document.getElementById('color-by').addEventListener('change', renderPlot);
-            document.getElementById('gene-search').addEventListener('input', debounce(searchGenes, 300));
-        });
-
-        async function loadArticles() {
-            const response = await fetch('/api/articles');
-            const articles = await response.json();
-
-            const select = document.getElementById('article-filter');
-            articles.forEach(article => {
-                const option = document.createElement('option');
-                option.value = article;
-                option.textContent = article;
-                select.appendChild(option);
-            });
-        }
-
-        async function loadDatasets() {
-            const article = document.getElementById('article-filter').value;
-            const url = article ? `/api/datasets?article=${encodeURIComponent(article)}` : '/api/datasets';
-
-            const response = await fetch(url);
-            const datasets = await response.json();
-
-            const grid = document.getElementById('dataset-grid');
-            grid.innerHTML = '';
-
-            datasets.forEach(ds => {
-                const card = document.createElement('div');
-                card.className = 'dataset-card';
-                card.onclick = () => openExplorer(ds.id, ds.name);
-                card.innerHTML = `
-                    <div class="dataset-thumbnail">
-                        <img src="${ds.thumbnail}" alt="${ds.name}" loading="lazy"
-                             onerror="this.parentElement.innerHTML='<span class=\\'loading\\'>Loading thumbnail...</span>'">
-                    </div>
-                    <div class="dataset-info">
-                        <span class="article-tag">${ds.article}</span>
-                        <h3>${ds.name}</h3>
-                        <div class="stats">
-                            <span>📊 ${ds.n_cells.toLocaleString()} cells</span>
-                            <span>🧬 ${ds.n_genes.toLocaleString()} genes</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            document.getElementById('dataset-count').textContent = `${datasets.length} datasets`;
-        }
-
-        async function openExplorer(datasetId, name) {
-            currentDataset = datasetId;
-            document.getElementById('modal-title').textContent = name;
-            document.getElementById('explorer-modal').classList.add('active');
-            document.getElementById('loading').style.display = 'flex';
-
-            // Load spatial data
-            const response = await fetch(`/api/datasets/${datasetId}/spatial`);
-            spatialData = await response.json();
-
-            // Update color by options
-            const colorSelect = document.getElementById('color-by');
-            colorSelect.innerHTML = '';
-            spatialData.metadata_columns.forEach(col => {
-                const option = document.createElement('option');
-                option.value = col;
-                option.textContent = col.charAt(0).toUpperCase() + col.slice(1).replace('.', ' ');
-                colorSelect.appendChild(option);
-            });
-
-            // Update info
-            document.getElementById('dataset-info').innerHTML = `
-                <p><strong>Cells:</strong> ${spatialData.n_cells.toLocaleString()}</p>
-                <p><strong>Genes:</strong> ${spatialData.n_genes.toLocaleString()}</p>
-            `;
-
-            // Render plot
-            await loadMetadata(colorSelect.value);
-            renderPlot();
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        async function loadMetadata(column) {
-            if (!spatialData.metadata || !spatialData.metadata[column]) {
-                const response = await fetch(`/api/datasets/${currentDataset}/spatial?color_by=${column}`);
-                const data = await response.json();
-                spatialData.metadata = { ...spatialData.metadata, ...data.metadata };
-            }
-        }
-
-        async function renderPlot() {
-            const colorBy = document.getElementById('color-by').value;
-            await loadMetadata(colorBy);
-
-            const { x, y } = spatialData.coordinates;
-            const colorData = spatialData.metadata[colorBy] || [];
-
-            let data;
-
-            if (selectedGene && spatialData.expression) {
-                // Gene expression mode
-                data = [{
-                    x, y,
-                    mode: 'markers',
-                    type: 'scattergl',
-                    marker: {
-                        size: 3,
-                        color: spatialData.expression,
-                        colorscale: [[0, '#e0e0e0'], [0.5, '#feb24c'], [1, '#bd0026']],
-                        colorbar: { title: selectedGene }
-                    },
-                    hovertemplate: `x: %{x}<br>y: %{y}<br>${selectedGene}: %{marker.color:.2f}<extra></extra>`
-                }];
-            } else {
-                // Categorical mode
-                const categories = [...new Set(colorData)].sort();
-                const colorMap = {};
-                categories.forEach((cat, i) => colorMap[cat] = COLORS[i % COLORS.length]);
-
-                data = [{
-                    x, y,
-                    mode: 'markers',
-                    type: 'scattergl',
-                    marker: {
-                        size: 3,
-                        color: colorData.map(c => colorMap[c]),
-                        opacity: 0.8
-                    },
-                    text: colorData,
-                    hovertemplate: `x: %{x}<br>y: %{y}<br>${colorBy}: %{text}<extra></extra>`
-                }];
-            }
-
-            const layout = {
-                xaxis: { title: 'X', scaleanchor: 'y' },
-                yaxis: { title: 'Y' },
-                margin: { t: 20, b: 40, l: 50, r: 20 },
-                hovermode: 'closest'
-            };
-
-            Plotly.react('plot', data, layout, { responsive: true });
-        }
-
-        async function searchGenes() {
-            const query = document.getElementById('gene-search').value;
-            if (query.length < 2) {
-                document.getElementById('gene-list').innerHTML = '';
-                return;
-            }
-
-            const response = await fetch(`/api/datasets/${currentDataset}/genes?q=${query}&limit=20`);
-            const data = await response.json();
-
-            const list = document.getElementById('gene-list');
-            list.innerHTML = data.genes.map(gene => `
-                <div style="padding: 8px; cursor: pointer; border-bottom: 1px solid #eee;"
-                     onclick="selectGene('${gene}')"
-                     onmouseover="this.style.background='#f0f0f0'"
-                     onmouseout="this.style.background='white'">
-                    ${gene}
-                </div>
-            `).join('');
-        }
-
-        async function selectGene(gene) {
-            selectedGene = gene;
-            document.getElementById('gene-search').value = gene;
-            document.getElementById('gene-list').innerHTML = '';
-            document.getElementById('loading').style.display = 'flex';
-
-            const response = await fetch(`/api/datasets/${currentDataset}/expression/${gene}`);
-            const data = await response.json();
-            spatialData.expression = data.expression;
-
-            renderPlot();
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        function closeModal() {
-            document.getElementById('explorer-modal').classList.remove('active');
-            currentDataset = null;
-            spatialData = null;
-            selectedGene = null;
-        }
-
-        function debounce(fn, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => fn(...args), delay);
-            };
-        }
-
-        // Close modal on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-    </script>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pinoli Neuroscience Lab. All rights reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+            <a href="https://www.nature.com/articles/s41467-025-62793-9">Nature Communications Paper</a>
+        </p>
+    </footer>
 </body>
+
 </html>

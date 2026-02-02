@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research - Pinoli Neuroscience Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #3498db;
+            --accent: #2c5aa0;
+            --bg-light: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #666;
+            --white: #ffffff;
+            --sidebar-width: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 0;
+            z-index: 1000;
+        }
+
+        .sidebar .logo {
+            padding: 0 25px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar .logo h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 12px 25px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: white;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            padding-left: 22px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Research Section */
+        .research-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .section-header {
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-header .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .research-area {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .research-area:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .research-area h3 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .research-area p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .research-keywords {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .keyword {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-left: var(--sidebar-width);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            footer {
+                margin-left: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>🔬 PINOLI NEUROSCIENCE LAB</h2>
+        </div>
+        <nav>
+            <a href="/">HOME</a>
+            <a href="/research" class="active">RESEARCH</a>
+            <a href="/publications">PUBLICATIONS</a>
+            <a href="/#team">MEMBERS</a>
+            <a href="/explorer">DATA EXPLORER</a>
+            <a href="/contact">CONTACT</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Research</h1>
+            <p>Advancing neuroscience through multi-omics and AI-driven approaches</p>
+        </section>
+
+        <!-- Research Section -->
+        <section class="research-section">
+            <div class="section-header">
+                <h2>Our Research Focus</h2>
+                <div class="divider"></div>
+                <p style="color: #666;">We integrate cutting-edge technologies to decode the complexities of the human
+                    brain</p>
+            </div>
+
+            <!-- Research Area 1 -->
+            <div class="research-area">
+                <h3>Spatial Transcriptomics & Brain Architecture</h3>
+                <p>Our laboratory pioneers the systematic characterization of cellular structural foundations underlying
+                    multiple cortical regions with complex functions. We establish comprehensive cellular atlases of the
+                    human cerebral cortex, bridging molecular profiling, spatial organization, and computational
+                    analysis to reveal how cellular diversity and organization give rise to higher-order cognitive
+                    functions.</p>
+                <p>Through innovative integration of single-cell multi-omics and spatial transcriptomics, we create
+                    multi-dimensional maps of human brain architecture, advancing our understanding of neural
+                    organization at unprecedented resolution.</p>
+                <div class="research-keywords">
+                    <span class="keyword">Spatial Transcriptomics</span>
+                    <span class="keyword">Single-Cell Analysis</span>
+                    <span class="keyword">Brain Mapping</span>
+                    <span class="keyword">Cellular Architecture</span>
+                </div>
+            </div>
+
+            <!-- Research Area 2 -->
+            <div class="research-area">
+                <h3>AI & Computational Neuroscience</h3>
+                <p>We stand at the forefront of integrating artificial intelligence with multi-omics approaches to
+                    decode intricate neural cellular networks and fundamental principles governing the human brain. Our
+                    advanced AI algorithms enable us to construct multi-dimensional maps of brain architecture,
+                    revealing patterns and relationships that would be impossible to discern through traditional
+                    methods.</p>
+                <p>By combining machine learning, deep learning, and innovative computational frameworks, we develop
+                    tools that transform raw biological data into actionable insights about brain function and
+                    organization.</p>
+                <div class="research-keywords">
+                    <span class="keyword">Artificial Intelligence</span>
+                    <span class="keyword">Machine Learning</span>
+                    <span class="keyword">Computational Methods</span>
+                    <span class="keyword">Data Integration</span>
+                </div>
+            </div>
+
+            <!-- Research Area 3 -->
+            <div class="research-area">
+                <h3>Neuropsychiatric Disorders</h3>
+                <p>Building upon our foundational knowledge of brain architecture, we extend our investigations to
+                    various neuropsychiatric disorders. By systematically comparing epileptic and healthy brain tissues,
+                    we have uncovered pathological alterations in cellular organizational structures within cortical and
+                    hippocampal regions.</p>
+                <p>This comparative approach provides unprecedented insights into the cellular mechanisms underlying
+                    epileptogenesis and associated cognitive impairments, opening new avenues for understanding disease
+                    pathophysiology at the cellular resolution and developing targeted therapeutic strategies.</p>
+                <div class="research-keywords">
+                    <span class="keyword">Epilepsy</span>
+                    <span class="keyword">Disease Mechanisms</span>
+                    <span class="keyword">Cellular Pathology</span>
+                    <span class="keyword">Translational Research</span>
+                </div>
+            </div>
+
+            <!-- Research Area 4 -->
+            <div class="research-area">
+                <h3>Multi-Modal Brain Imaging</h3>
+                <p>Our integrative framework combines spatial transcriptomics, neuroimaging, and mesoscopic imaging
+                    modalities to construct comprehensive views of human brain structure and function. This multi-modal
+                    approach allows us to bridge molecular, cellular, and systems-level understanding of the brain.</p>
+                <p>By integrating data across scales and modalities, we create holistic models that capture the
+                    complexity of neural organization in both health and disease states.</p>
+                <div class="research-keywords">
+                    <span class="keyword">Neuroimaging</span>
+                    <span class="keyword">Mesoscopic Imaging</span>
+                    <span class="keyword">Multi-Modal Integration</span>
+                    <span class="keyword">Systems Neuroscience</span>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pinoli Neuroscience Lab. All rights reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+            <a href="https://www.nature.com/articles/s41467-025-62793-9">Nature Communications Paper</a>
+        </p>
+    </footer>
+</body>
+
+</html>
