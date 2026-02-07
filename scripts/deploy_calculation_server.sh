@@ -33,7 +33,7 @@ DATA_DIR="/home/jiaxi/spatial_data"
 SERVICE_NAME="lab-website-calc"
 
 # Allow connections from static/transfer server
-ALLOWED_IP="175.41.197.121"
+ALLOWED_IP="43.207.99.62"
 
 echo -e "${YELLOW}Configuration:${NC}"
 echo "App Directory: $APP_DIR"

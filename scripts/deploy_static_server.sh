@@ -5,7 +5,7 @@
 # Server Role: Serve static content + Reverse proxy
 # Technology: Nginx
 # Domain: pinolilab.org
-# Server IP: 175.41.197.121
+# Server IP: 43.207.99.62
 #############################################
 
 set -e

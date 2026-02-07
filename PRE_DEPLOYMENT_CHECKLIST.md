@@ -6,13 +6,13 @@ Complete this checklist before running deployment scripts.
 
 ### Configuration (Already Done ✅)
 - [x] `CALC_SERVER` set to `192.168.25.2:5000`
-- [x] `STATIC_SERVER_IP` set to `175.41.197.121`
+- [x] `STATIC_SERVER_IP` set to `43.207.99.62`
 - [x] `DATA_DIR` set to `/home/jiaxi/spatial_data`
 - [ ] Verify `DATA_DIR` path exists on calculation server
 - [ ] Provide `SSL_EMAIL` for Let's Encrypt certificate (optional)
 
 ### Server Access
-- [ ] SSH access to transfer server: `ssh root@175.41.197.121`
+- [ ] SSH access to transfer server: `ssh root@43.207.99.62`
 - [ ] SSH access to calculation server: `ssh root@192.168.25.2`
 - [ ] Root/sudo privileges on both servers
 - [ ] Servers can reach GitHub (for git clone)
@@ -23,7 +23,7 @@ Complete this checklist before running deployment scripts.
 - [ ] DNS propagation complete (check with `dig pinolilab.org`)
 
 ### Network Configuration
-- [ ] Transfer server (175.41.197.121) can reach calculation server (192.168.25.2) on port 5000
+- [ ] Transfer server (43.207.99.62) can reach calculation server (192.168.25.2) on port 5000
 - [ ] Test with: `curl http://192.168.25.2:5000` (after Flask is running)
 - [ ] Firewall rules allow traffic between servers
 
@@ -71,11 +71,11 @@ sudo bash scripts/deploy_calculation_server.sh
 
 ---
 
-### Step 2: Deploy Transfer/Static Server (175.41.197.121)
+### Step 2: Deploy Transfer/Static Server (43.207.99.62)
 
 ```bash
 # SSH to transfer server
-ssh root@175.41.197.121
+ssh root@43.207.99.62
 
 # Clone repository
 git clone https://github.com/wujiaxi/lab-website.git
@@ -275,7 +275,7 @@ sudo journalctl -u lab-website-calc -n 50
 curl http://localhost:5000/health
 
 # Check connectivity from transfer server
-# (run on 175.41.197.121)
+# (run on 43.207.99.62)
 curl http://192.168.25.2:5000/health
 
 # Check firewall

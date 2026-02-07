@@ -11,9 +11,9 @@ cd lab-website
 sudo bash scripts/deploy_calculation_server.sh
 ```
 
-### 2. Deploy Transfer/Static Server (175.41.197.121)
+### 2. Deploy Transfer/Static Server (43.207.99.62)
 ```bash
-ssh root@175.41.197.121
+ssh root@43.207.99.62
 
 git clone https://github.com/wujiaxi/lab-website.git
 cd lab-website
@@ -39,7 +39,7 @@ curl https://pinolilab.org/api/datasets
 | Server | IP Address | Role |
 |--------|------------|------|
 | Calculation | 192.168.25.2:5000 | Flask + H5AD processing |
-| Transfer/Static | 175.41.197.121 | Nginx + SSL |
+| Transfer/Static | 43.207.99.62 | Nginx + SSL |
 
 **Data directory:** `/home/jiaxi/spatial_data`
 

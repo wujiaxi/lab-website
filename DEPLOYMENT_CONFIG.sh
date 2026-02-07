@@ -28,7 +28,7 @@ export DATA_DIR="/home/jiaxi/spatial_data"  # ⚠️ VERIFY THIS PATH
 
 # IP address of static server (for firewall rules)
 # Used to restrict access to Flask backend
-export STATIC_SERVER_IP="175.41.197.121"  # Transfer/static server
+export STATIC_SERVER_IP="43.207.99.62"  # Transfer/static server
 
 # ============================================
 # FLASK CONFIGURATION

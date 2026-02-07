@@ -13,7 +13,7 @@ This guide explains how to deploy the lab website using a two-server architectur
        ▼
 ┌──────────────────────────────────────┐
 │  Server 1: Static/Transfer Server    │
-│  IP: 175.41.197.121                  │
+│  IP: 43.207.99.62                  │
 │  Domain: pinolilab.org               │
 │  ──────────────────────────────────  │
 │  ┌─────────────────────────────┐    │
@@ -98,10 +98,10 @@ The script will:
 
 ### Step 2: Deploy Static/Transfer Server
 
-SSH to transfer server (175.41.197.121):
+SSH to transfer server (43.207.99.62):
 
 ```bash
-ssh root@175.41.197.121
+ssh root@43.207.99.62
 
 # Clone repository
 git clone https://github.com/wujiaxi/lab-website.git
