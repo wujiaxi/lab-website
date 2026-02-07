@@ -2,45 +2,46 @@
 
 ## 🚀 Quick Start
 
-### 1. Static Server Deployment (Server 1)
+### 1. Deploy Calculation Server First (192.168.25.2)
 ```bash
+ssh root@192.168.25.2
+
 git clone https://github.com/wujiaxi/lab-website.git
 cd lab-website
-
-# Edit scripts/deploy_static_server.sh - set CALC_SERVER IP
-nano scripts/deploy_static_server.sh
-
-sudo bash scripts/deploy_static_server.sh
-```
-
-### 2. Calculation Server Deployment (Server 2)
-```bash
-git clone https://github.com/wujiaxi/lab-website.git
-cd lab-website
-
 sudo bash scripts/deploy_calculation_server.sh
 ```
 
-### 3. Update Static Server Nginx Config
-After deploying calculation server, update the static server's Nginx config with the actual calculation server IP.
+### 2. Deploy Transfer/Static Server (175.41.197.121)
+```bash
+ssh root@175.41.197.121
+
+git clone https://github.com/wujiaxi/lab-website.git
+cd lab-website
+sudo bash scripts/deploy_static_server.sh
+```
+
+### 3. Verify Deployment
+```bash
+# Test calculation server
+curl http://192.168.25.2:5000/health
+
+# Test static server
+curl https://pinolilab.org/
+curl https://pinolilab.org/api/datasets
+```
 
 ---
 
-## 📋 Configuration Checklist
+## 📋 Server Configuration
 
-Before deploying, update these values:
+**Pre-configured server IPs:**
 
-### In `scripts/deploy_static_server.sh`:
-- [ ] `CALC_SERVER="<YOUR_CALC_SERVER_IP>:5000"`
-  - Example: `CALC_SERVER="192.168.1.100:5000"`
-  - If same machine: `CALC_SERVER="localhost:5000"`
+| Server | IP Address | Role |
+|--------|------------|------|
+| Calculation | 192.168.25.2:5000 | Flask + H5AD processing |
+| Transfer/Static | 175.41.197.121 | Nginx + SSL |
 
-### In `scripts/deploy_calculation_server.sh`:
-- [ ] `DATA_DIR="/home/jiaxi/spatial_data"` (your H5AD data location)
-- [ ] `ALLOWED_IP="175.41.197.121"` (your static server IP)
-
-### In `backend/app_calc_server.py`:
-- [ ] CORS origins: `["https://pinolilab.org", "http://pinolilab.org"]`
+**Data directory:** `/home/jiaxi/spatial_data`
 
 ---
 
@@ -53,11 +54,11 @@ curl http://pinolilab.org/publications
 curl http://pinolilab.org/static/images/logo.png
 ```
 
-### Test Calculation Server
+### Test Calculation Server (192.168.25.2)
 ```bash
-curl http://localhost:5000/health
-curl http://localhost:5000/api/datasets
-curl http://localhost:5000/api/cache
+curl http://192.168.25.2:5000/health
+curl http://192.168.25.2:5000/api/datasets
+curl http://192.168.25.2:5000/api/cache
 ```
 
 ### Test Integration (API via Static Server)
@@ -94,7 +95,7 @@ sudo systemctl restart lab-website-calc
 sudo journalctl -u lab-website-calc -f
 
 # Cache stats
-curl http://localhost:5000/api/cache
+curl http://192.168.25.2:5000/api/cache
 ```
 
 ---
@@ -149,7 +150,7 @@ sudo tail -f /var/log/nginx/error.log
 sudo systemctl status lab-website-calc
 
 # Test from static server
-curl http://<CALC_IP>:5000/health
+curl http://192.168.25.2:5000/health
 
 # Check firewall
 sudo ufw status

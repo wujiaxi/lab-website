@@ -28,7 +28,7 @@ This guide explains how to deploy the lab website using a two-server architectur
                ▼
 ┌──────────────────────────────────────┐
 │  Server 2: Calculation Server        │
-│  IP: <YOUR_CALC_SERVER_IP>           │
+│  IP: 192.168.25.2                    │
 │  ──────────────────────────────────  │
 │  ┌─────────────────────────────┐    │
 │  │   Flask + Gunicorn          │    │
@@ -72,22 +72,21 @@ This guide explains how to deploy the lab website using a two-server architectur
 - Root/sudo access
 - Domain name pointing to static server (pinolilab.org)
 
-### Step 1: Deploy Static Server
+### Step 1: Deploy Calculation Server First
 
-On your static server (175.41.197.121):
+Deploy the calculation server first so it's ready when the static server starts proxying.
+
+SSH to calculation server (192.168.25.2):
 
 ```bash
+ssh root@192.168.25.2
+
 # Clone repository
 git clone https://github.com/wujiaxi/lab-website.git
 cd lab-website
 
-# Edit the script to set your calculation server IP
-nano scripts/deploy_static_server.sh
-# Change: CALC_SERVER="localhost:5000" to your actual IP
-# Example: CALC_SERVER="192.168.1.100:5000"
-
 # Run deployment script
-sudo bash scripts/deploy_static_server.sh
+sudo bash scripts/deploy_calculation_server.sh
 ```
 
 The script will:
@@ -97,21 +96,19 @@ The script will:
 - ✓ Configure Nginx for static serving + reverse proxy
 - ✓ Optionally set up SSL with Let's Encrypt
 
-### Step 2: Deploy Calculation Server
+### Step 2: Deploy Static/Transfer Server
 
-On your calculation server:
+SSH to transfer server (175.41.197.121):
 
 ```bash
+ssh root@175.41.197.121
+
 # Clone repository
 git clone https://github.com/wujiaxi/lab-website.git
 cd lab-website
 
-# Edit the script to set your data directory
-nano scripts/deploy_calculation_server.sh
-# Verify: DATA_DIR="/home/jiaxi/spatial_data"
-
 # Run deployment script
-sudo bash scripts/deploy_calculation_server.sh
+sudo bash scripts/deploy_static_server.sh
 ```
 
 The script will:
@@ -157,9 +154,9 @@ curl http://pinolilab.org/research
 
 Test the calculation server:
 ```bash
-# From calculation server
-curl http://localhost:5000/health
-curl http://localhost:5000/api/datasets
+# From calculation server (192.168.25.2)
+curl http://192.168.25.2:5000/health
+curl http://192.168.25.2:5000/api/datasets
 ```
 
 Test integration:
@@ -309,7 +306,7 @@ python3 scripts/extract_static_pages.py \
 sudo systemctl status lab-website-calc
 
 # Test connection from static server
-curl http://<CALC_SERVER_IP>:5000/health
+curl http://192.168.25.2:5000/health
 
 # Check firewall
 sudo ufw status

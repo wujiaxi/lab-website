@@ -4,18 +4,16 @@ Complete this checklist before running deployment scripts.
 
 ## 📋 Pre-Deployment Tasks
 
-### Configuration
-- [ ] Edit `DEPLOYMENT_CONFIG.sh` with your server details
-- [ ] Set `CALC_SERVER` to your calculation server IP/hostname
+### Configuration (Already Done ✅)
+- [x] `CALC_SERVER` set to `192.168.25.2:5000`
+- [x] `STATIC_SERVER_IP` set to `175.41.197.121`
+- [x] `DATA_DIR` set to `/home/jiaxi/spatial_data`
 - [ ] Verify `DATA_DIR` path exists on calculation server
-- [ ] Set `STATIC_SERVER_IP` for firewall rules
-- [ ] Provide `SSL_EMAIL` for Let's Encrypt certificate
-- [ ] Adjust `GUNICORN_WORKERS` based on CPU cores
-- [ ] Review `MEMORY_LIMIT` based on dataset sizes
+- [ ] Provide `SSL_EMAIL` for Let's Encrypt certificate (optional)
 
 ### Server Access
-- [ ] SSH access to static server (175.41.197.121)
-- [ ] SSH access to calculation server
+- [ ] SSH access to transfer server: `ssh root@175.41.197.121`
+- [ ] SSH access to calculation server: `ssh root@192.168.25.2`
 - [ ] Root/sudo privileges on both servers
 - [ ] Servers can reach GitHub (for git clone)
 
@@ -25,9 +23,8 @@ Complete this checklist before running deployment scripts.
 - [ ] DNS propagation complete (check with `dig pinolilab.org`)
 
 ### Network Configuration
-- [ ] Static server can reach calculation server on port 5000
-- [ ] Test with: `curl http://<CALC_SERVER_IP>:5000` (after Flask is running)
-- [ ] If using private network, verify connectivity
+- [ ] Transfer server (175.41.197.121) can reach calculation server (192.168.25.2) on port 5000
+- [ ] Test with: `curl http://192.168.25.2:5000` (after Flask is running)
 - [ ] Firewall rules allow traffic between servers
 
 ### Data Preparation
@@ -50,25 +47,42 @@ Complete this checklist before running deployment scripts.
 
 ## 🚀 Deployment Steps
 
-### Step 1: Deploy Static Server
+### Step 1: Deploy Calculation Server First (192.168.25.2)
 
 ```bash
-# SSH to static server
-ssh user@175.41.197.121
+# SSH to calculation server
+ssh root@192.168.25.2
 
 # Clone repository
 git clone https://github.com/wujiaxi/lab-website.git
 cd lab-website
 
-# Configure deployment
-nano DEPLOYMENT_CONFIG.sh
-# Update CALC_SERVER, SSL_EMAIL, etc.
+# Run deployment
+sudo bash scripts/deploy_calculation_server.sh
+```
 
-# Source configuration
-source DEPLOYMENT_CONFIG.sh
+**Expected Time:** 10-15 minutes (includes Python package installation)
 
-# Run deployment (will prompt for confirmations)
-sudo -E bash scripts/deploy_static_server.sh
+**Verification:**
+- [ ] Flask service running: `sudo systemctl status lab-website-calc`
+- [ ] Health check passes: `curl http://192.168.25.2:5000/health`
+- [ ] API responds: `curl http://192.168.25.2:5000/api/datasets`
+- [ ] No errors in logs: `sudo journalctl -u lab-website-calc -n 50`
+
+---
+
+### Step 2: Deploy Transfer/Static Server (175.41.197.121)
+
+```bash
+# SSH to transfer server
+ssh root@175.41.197.121
+
+# Clone repository
+git clone https://github.com/wujiaxi/lab-website.git
+cd lab-website
+
+# Run deployment
+sudo bash scripts/deploy_static_server.sh
 ```
 
 **Expected Time:** 5-10 minutes
@@ -110,7 +124,7 @@ sudo -E bash scripts/deploy_calculation_server.sh
 - [ ] API responds: `curl http://localhost:5000/api/datasets`
 - [ ] No errors in logs: `sudo journalctl -u lab-website-calc -n 50`
 
----
+### Step 3: Register Datasets (on 192.168.25.2)
 
 ### Step 3: Register Datasets
 
@@ -134,7 +148,7 @@ curl -X POST http://localhost:5000/api/register \
   }'
 
 # Verify registration
-curl http://localhost:5000/api/datasets | jq
+curl http://192.168.25.2:5000/api/datasets | jq
 ```
 
 **Verification:**
@@ -143,6 +157,8 @@ curl http://localhost:5000/api/datasets | jq
 - [ ] No errors in Flask logs
 
 ---
+
+### Step 4: End-to-End Testing
 
 ### Step 4: Update Static Server Nginx Config
 
@@ -258,9 +274,9 @@ sudo journalctl -u lab-website-calc -n 50
 # Test Flask directly
 curl http://localhost:5000/health
 
-# Check connectivity from static server
-# (run on static server)
-curl http://<CALC_SERVER_IP>:5000/health
+# Check connectivity from transfer server
+# (run on 175.41.197.121)
+curl http://192.168.25.2:5000/health
 
 # Check firewall
 sudo ufw status
@@ -288,10 +304,10 @@ free -h
 htop
 
 # Check cache
-curl http://localhost:5000/api/cache
+curl http://192.168.25.2:5000/api/cache
 
 # Clear cache if needed
-curl -X POST http://localhost:5000/api/cache/clear
+curl -X POST http://192.168.25.2:5000/api/cache/clear
 
 # Adjust memory limit in systemd service
 sudo nano /etc/systemd/system/lab-website-calc.service
