@@ -32,8 +32,8 @@ PYTHON_VERSION="python3"
 DATA_DIR="/home/jiaxi/spatial_data"
 SERVICE_NAME="lab-website-calc"
 
-# Allow connections from (set to static server IP for security)
-ALLOWED_IP="175.41.197.121"  # Your static server IP
+# Allow connections from static/transfer server
+ALLOWED_IP="175.41.197.121"
 
 echo -e "${YELLOW}Configuration:${NC}"
 echo "App Directory: $APP_DIR"

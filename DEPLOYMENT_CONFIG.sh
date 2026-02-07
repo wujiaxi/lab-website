@@ -17,7 +17,7 @@ export DOMAIN="pinolilab.org"
 #   - Private network: "192.168.1.100:5000"
 #   - Public IP: "12.34.56.78:5000"
 #   - Domain name: "calc.pinolilab.org:5000"
-export CALC_SERVER="localhost:5000"  # ⚠️ CHANGE THIS
+export CALC_SERVER="192.168.25.2:5000"  # Calculation server
 
 # ============================================
 # CALCULATION SERVER CONFIGURATION
@@ -28,7 +28,7 @@ export DATA_DIR="/home/jiaxi/spatial_data"  # ⚠️ VERIFY THIS PATH
 
 # IP address of static server (for firewall rules)
 # Used to restrict access to Flask backend
-export STATIC_SERVER_IP="175.41.197.121"  # ⚠️ CHANGE THIS IF NEEDED
+export STATIC_SERVER_IP="175.41.197.121"  # Transfer/static server
 
 # ============================================
 # FLASK CONFIGURATION

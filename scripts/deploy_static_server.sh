@@ -32,8 +32,8 @@ APP_DIR="/var/www/lab-website"
 STATIC_DIR="/var/www/lab-website/static-pages"
 REPO_URL="https://github.com/wujiaxi/lab-website.git"
 
-# IMPORTANT: Set your calculation server IP/hostname
-CALC_SERVER="localhost:5000"  # Change this to your actual calculation server
+# Calculation server address
+CALC_SERVER="192.168.25.2:5000"
 # Examples:
 # CALC_SERVER="192.168.1.100:5000"  # Private IP
 # CALC_SERVER="calc.pinolilab.org:5000"  # Domain name
